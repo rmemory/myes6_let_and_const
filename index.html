@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Variable scopes</title>
+</head>
+<body>
+	<script>
+
+		/*
+		 * Summary: Use var for all global scope vars. Use let elsewhere only if changing the 
+		 *			the value is necessary. Otherwise, use const everywhere else. In fact, 
+		 *			use const by default, and only change to let when it becomes necessary.
+		 * 
+		 */
+		function setWidth() {
+			var width = 100;
+		}
+		setWidth(); // Cannot access width outside of setWidth
+
+		var age = 100;
+		if (age > 12) {
+			var dogYears = age * 7;
+			console.log(`You are ${dogYears} dog years old`);
+		}
+
+		// You can access dogYears here because var only scopes vars inside of
+		// functions. Also note that var declared variables, can be redeclared
+		// elsewhere ... typically this creates buggy code
+
+		// Let and const are scoped to a block instead of just functions.
+		let height = 200;
+		const key = "abc123";
+
+		let points = 50;
+		let winner = false;
+
+		if (points > 40) {
+			console.log("It ran");
+			let winner = true; // This version of winner is only valid in this block
+		}
+
+		// winner here is false
+
+		// key = "foobar"; // This is an error
+
+		// In this example, the person object is a const, but the properties in the class 
+		// can change.
+		const person = {
+			name: 'Richard',
+			hair: 'bald'
+		}
+
+		person['hair'] = 'brown';
+
+		// Object.freeze(person) will lock everything down in the person object
+
+		// Vars require IIFEs to protect them, vars and consts do not
+		for (var i = 0; i < 10; i++) {
+			console.log(i); // This prints out 0 - 9
+			setTimeout(function() {
+				console.log('The number is ' + i); // This function will get called 10 times, but will always 
+												   // print the value of 10, because the outer loop will have
+												   // already set the final value of i to 10. If you want 
+												   // setTimeout to print out the value of i when setTimeout
+												   // was initially called, you'd need to use a let declaration.
+												   // Also think in terms of a long AJAX call, which would 
+												   // result in the same thing.
+			}, 1000);
+		}
+
+		for (let i = 0; i < 10; i++) {
+			console.log(i); // This prints out 0 - 9
+			setTimeout(function() {
+				console.log('The number is ' + i); // This will also print out 0 - 9 after one second
+			}, 1000);
+		}
+
+		// Temporal dead zone
+		console.log(var_pizza); // Not an error, but will be undefined
+		var var_pizza = 'Deep dish pizza'; 
+
+		console.log(let_or_const_pizza); // Undefined error
+		let let_pizza = 'Another Deep dish pizza';
+	</script>
+</body>
+</html>
